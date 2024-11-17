@@ -15,6 +15,17 @@ class EventsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Events::class);
     }
+    public function filterByField(string $field, string $value): array
+    {
+        $queryBuilder = $this->createQueryBuilder('e');
+
+        // Dynamically add filter based on the field
+        $queryBuilder
+            ->where("e.$field LIKE :value")
+            ->setParameter('value', '%' . $value . '%');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 
     //    /**
     //     * @return Events[] Returns an array of Events objects
