@@ -20,6 +20,18 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Tickets $Ticket = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservation')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservation')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Events $events = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +57,42 @@ class Reservation
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTicket(): ?Tickets
+    {
+        return $this->Ticket;
+    }
+
+    public function setTicket(Tickets $Ticket): static
+    {
+        $this->Ticket = $Ticket;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEvents(): ?Events
+    {
+        return $this->events;
+    }
+
+    public function setEvents(?Events $events): static
+    {
+        $this->events = $events;
 
         return $this;
     }

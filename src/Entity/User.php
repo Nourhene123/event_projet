@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,24 @@ class User
 
     #[ORM\Column(type: Types::ARRAY)]
     private array $Role = [];
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $reservation;
+
+    /**
+     * @var Collection<int, Events>
+     */
+    #[ORM\ManyToMany(targetEntity: Events::class, inversedBy: 'users')]
+    private Collection $event;
+
+    public function __construct()
+    {
+        $this->reservation = new ArrayCollection();
+        $this->event = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +95,60 @@ class User
     public function setRole(array $Role): static
     {
         $this->Role = $Role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservation(): Collection
+    {
+        return $this->reservation;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservation->contains($reservation)) {
+            $this->reservation->add($reservation);
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservation->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Events>
+     */
+    public function getEvent(): Collection
+    {
+        return $this->event;
+    }
+
+    public function addEvent(Events $event): static
+    {
+        if (!$this->event->contains($event)) {
+            $this->event->add($event);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Events $event): static
+    {
+        $this->event->removeElement($event);
 
         return $this;
     }
