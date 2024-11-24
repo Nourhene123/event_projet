@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EventsController extends AbstractController
 { private $em;
@@ -18,7 +19,7 @@ class EventsController extends AbstractController
     #[Route('/events', name: 'app_event')]
     public function listEvents(EventsRepository $er,UserRepository $ur): Response
     {
-        $user=$ur->find(1);
+        $user=$this->getUser();
         $reservations = $this->em->getRepository(Reservation::class)->findBy(['User' => $user]);
         $registeredEvents = array_map(function($reservation) {
             return $reservation->getEvent()->getId(); },
@@ -35,6 +36,12 @@ class EventsController extends AbstractController
     #[Route('/events/filter', name: 'app_event_filter', methods: ['GET'])]
     public function filterEvents(Request $request, EventsRepository $er): Response
     {
+        $user=$this->getUser();
+        $reservations = $this->em->getRepository(Reservation::class)->findBy(['User' => $user]);
+        $registeredEvents = array_map(function($reservation) {
+            return $reservation->getEvent()->getId(); },
+            $reservations);
+        $events = $er->findAll();
         $field = $request->query->get('field'); // e.g., 'description', 'name', etc.
         $value = $request->query->get('value'); // e.g., 'workshop'
 
@@ -48,6 +55,15 @@ class EventsController extends AbstractController
             'events' => $events,
             'field' => $field,
             'value' => $value,
+            'registeredEvents' => $registeredEvents
         ]);
     }
+    #[Route('/events/new', name: 'add_event',methods: ['POST'])]
+    #[IsGranted('ROLE_ORGANIZER')]
+    public function createEvent(EventsRepository $er,UserRepository $ur): Response
+    {
+
+        return$this->redirect("app_events");
+    }
+
 }

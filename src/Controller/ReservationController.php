@@ -15,19 +15,18 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ReservationController extends AbstractController
 {
-    #[Route('/reservation/{id}/{id2}', name: 'event_reservation', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function register(int $id,int $id2,EventsRepository $er,UserRepository $ur,EntityManagerInterface $em): Response
+    #[Route('/reservation/{id}', name: 'event_reservation', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function register(int $id,EventsRepository $er,UserRepository $ur,EntityManagerInterface $em): Response
 
     {   $reservation = new Reservation();
         $event =$er->find($id);
-        $user=$ur->find($id2);
+        $user = $this->getUser();
         $reservation->setEvent($event);
         $reservation->setDate($event->getDate());
         $reservation->setUser($user);
         $reservation->setStatus("Not Payed");
 
 
-         $reservation->setUser($this->getUser());
         // Persist the reservation to the database
         //$entityManager = $this->getDoctrine()->getManager();
         $em->persist($reservation);

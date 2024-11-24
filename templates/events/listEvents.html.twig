@@ -1,9 +1,9 @@
 {# templates/events/listEvents.html.twig #}
-{% extends 'base.html.twig' %}
+{% extends 'Home.html.twig' %}
 
 {% block title %}Events List{% endblock %}
 
-{% block body %}
+{% block bodyUser %}
     <div class="container mt-5">
         <h1 class="text-center mb-4">Event List</h1>
 
@@ -65,9 +65,9 @@
                         <td>{{ event.price }}</td>
                         <td>
                             {% if event.id in registeredEvents %}
-                                <a href="{{ path('app_event', {'id': event.id,'id2':1}) }}" class="btn btn-primary">Reserved See more</a>
+                                <a href="{{ path('app_event', {'id': event.id}) }}" class="btn btn-primary">Reserved See more</a>
                             {% else %}
-                                <a href="{{ path('app_event', {'id': event.id,'id2':1}) }}" class="btn btn-primary">Reserve</a>
+                                <a href="{{ path('event_reservation', {'id': event.id}) }}" class="btn btn-primary">Reserve</a>
                             {% endif %}
                         </td>
                     </tr>
