@@ -92,11 +92,12 @@ class Local
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->setLocal($this);
+            $event->setLocal($this); // Keep the inverse side updated
         }
 
         return $this;
     }
+
 
     public function removeEvent(Events $event): static
     {
@@ -120,5 +121,9 @@ class Local
         $this->louer = $louer;
 
         return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }
