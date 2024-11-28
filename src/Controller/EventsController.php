@@ -2,68 +2,105 @@
 
 namespace App\Controller;
 
-use App\Entity\Reservation;
+use Doctrine\DBAL\Types\Types;
+
+use App\Entity\Events;
+use App\Form\EventType;
 use App\Repository\EventsRepository;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EventsController extends AbstractController
-{ private $em;
-    public function __construct(EntityManagerInterface $em) { $this->em = $em; }
+{
     #[Route('/events', name: 'app_event')]
-    public function listEvents(EventsRepository $er,UserRepository $ur): Response
+    public function listEvents(EventsRepository $er): Response
     {
-        $user=$this->getUser();
-        $reservations = $this->em->getRepository(Reservation::class)->findBy(['User' => $user]);
-        $registeredEvents = array_map(function($reservation) {
-            return $reservation->getEvent()->getId(); },
-            $reservations);
         $events = $er->findAll();
         return $this->render('events/listEvents.html.twig', [
             'events' => $events,
             'field' => "",
             'value' => "",
-            'registeredEvents' => $registeredEvents,
         ]);
     }
 
     #[Route('/events/filter', name: 'app_event_filter', methods: ['GET'])]
     public function filterEvents(Request $request, EventsRepository $er): Response
     {
-        $user=$this->getUser();
-        $reservations = $this->em->getRepository(Reservation::class)->findBy(['User' => $user]);
-        $registeredEvents = array_map(function($reservation) {
-            return $reservation->getEvent()->getId(); },
-            $reservations);
-        $events = $er->findAll();
-        $field = $request->query->get('field'); // e.g., 'description', 'name', etc.
-        $value = $request->query->get('value'); // e.g., 'workshop'
+        $field = $request->query->get('field');
+        $value = $request->query->get('value');
 
         if ($field && $value) {
             $events = $er->filterByField($field, $value);
         } else {
-            $events = $er->findAll(); // Default to all events if no filter is applied
+            $events = $er->findAll();
         }
 
         return $this->render('events/listEvents.html.twig', [
             'events' => $events,
             'field' => $field,
             'value' => $value,
-            'registeredEvents' => $registeredEvents
         ]);
     }
-    #[Route('/events/new', name: 'add_event',methods: ['POST'])]
-    #[IsGranted('ROLE_ORGANIZER')]
-    public function createEvent(EventsRepository $er,UserRepository $ur): Response
+    #[Route('/events/new', name: 'app_new')]
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
+        $event = new Events();
 
-        return$this->redirect("app_events");
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($event);
+            $em->flush();
+
+            return $this->redirectToRoute('app_event');
+        }
+
+        return $this->render('events/new.html.twig', [
+            'formE' => $form->createView(),
+        ]);
     }
 
+
+    #[Route('/event/edit/{id}', name: 'app_event_edit')]
+    public function edit(Events $event, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Création du formulaire avec l'entité existante
+        $form = $this->createForm(EventType::class, $event);
+
+        // Traitement de la requête
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Enregistrement des modifications
+            $entityManager->flush();
+
+            // Redirection après succès
+            return $this->redirectToRoute('app_event');
+        }
+
+        return $this->render('events/editEvent.html.twig', [
+            'form' => $form->createView(),
+            'event' => $event,
+        ]);
+    }
+
+
+
+    // Delete Event
+    #[Route('/events/delete/{id}', name: 'app_event_delete', methods: ['POST'])]
+    public function deleteEvent(Request $request, Events $event, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
+            $em->remove($event);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_event');
+    }
 }

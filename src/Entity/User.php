@@ -49,6 +49,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reservations = new ArrayCollection();
     }
 
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $reservation;
+
+    /**
+     * @var Collection<int, Events>
+     */
+    #[ORM\ManyToMany(targetEntity: Events::class, inversedBy: 'users')]
+    private Collection $event;
+
+    public function __construct()
+    {
+        $this->reservation = new ArrayCollection();
+        $this->event = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,6 +181,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservation(): Collection
+    {
+        return $this->reservation;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservation->contains($reservation)) {
+            $this->reservation->add($reservation);
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservation->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Events>
+     */
+    public function getEvent(): Collection
+    {
+        return $this->event;
+    }
+
+    public function addEvent(Events $event): static
+    {
+        if (!$this->event->contains($event)) {
+            $this->event->add($event);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Events $event): static
+    {
+        $this->event->removeElement($event);
 
         return $this;
     }

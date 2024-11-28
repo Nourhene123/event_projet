@@ -1,9 +1,9 @@
 {# templates/events/listEvents.html.twig #}
-{% extends 'Home.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Events List{% endblock %}
+{% block title %}Event List{% endblock %}
 
-{% block bodyUser %}
+{% block body %}
     <div class="container mt-5">
         <h1 class="text-center mb-4">Event List</h1>
 
@@ -19,12 +19,11 @@
                         <select name="field" id="field" class="form-select">
                             <option value="nom" {% if field == 'nom' %}selected{% endif %}>Name</option>
                             <option value="description" {% if field == 'description' %}selected{% endif %}>Description</option>
-                            <option value="localisation" {% if field == 'localisation' %}selected{% endif %}>Location</option>
+                            <option value="localisation" {% if field == 'local' %}selected{% endif %}>Location</option>
                             <option value="date" {% if field == 'date' %}selected{% endif %}>Date</option>
                             <option value="Category" {% if field == 'Category' %}selected{% endif %}>Category</option>
                         </select>
                     </div>
-
                     <div class="col-md-6">
                         <label for="value" class="form-label">Search Value</label>
                         <input type="text" name="value" id="value" class="form-control" value="{{ value|default('') }}">
@@ -34,6 +33,8 @@
                         <a href="{{ path('app_event') }}" class="btn btn-secondary">Reset</a>
                     </div>
                 </form>
+
+
             </div>
         </div>
 
@@ -49,8 +50,7 @@
                     <th>Date</th>
                     <th>Location</th>
                     <th>Description</th>
-                    <th>Category</th>
-                    <th>Price (€)</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -59,21 +59,23 @@
                         <td>{{ event.id }}</td>
                         <td>{{ event.nom }}</td>
                         <td>{{ event.date|date('Y-m-d') }}</td>
-                        <td>{{ event.localisation }}</td>
+                        <td>{{ event.local }}</td>
                         <td>{{ event.description }}</td>
-                        <td>{{ event.category }}</td>
-                        <td>{{ event.price }}</td>
                         <td>
-                            {% if event.id in registeredEvents %}
-                                <a href="{{ path('app_event', {'id': event.id}) }}" class="btn btn-primary">Reserved See more</a>
-                            {% else %}
-                                <a href="{{ path('event_reservation', {'id': event.id}) }}" class="btn btn-primary">Reserve</a>
-                            {% endif %}
+                            <a href="{{ path('app_event_edit', {id: event.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                            {# Bouton Delete avec confirmation #}
+                            <form action="{{ path('app_event_delete', {id: event.id}) }}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         {% endif %}
+
     </div>
 {% endblock %}
+
