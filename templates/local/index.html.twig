@@ -1,20 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello LocalController!{% endblock %}
+{% block title %}Local index{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Local index</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Adr</th>
+                <th>Capacite</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for local in locals %}
+            <tr>
+                <td>{{ local.id }}</td>
+                <td>{{ local.name }}</td>
+                <td>{{ local.adr }}</td>
+                <td>{{ local.capacite }}</td>
+                <td>
+                    <a href="{{ path('app_local_show', {'id': local.id}) }}">show</a>
+                    <a href="{{ path('app_local_edit', {'id': local.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/Projet_Events/src/Controller/LocalController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/Projet_Events/templates/local/index.html.twig</code></li>
-    </ul>
-</div>
+    <a href="{{ path('app_local_new') }}">Create new</a>
 {% endblock %}

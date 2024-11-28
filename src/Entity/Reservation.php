@@ -20,17 +20,15 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Tickets $Ticket = null;
+    private ?Events $Event = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservation')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?User $User = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservation')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Events $events = null;
+    #[ORM\OneToOne(mappedBy: 'reservation', cascade: ['persist', 'remove'])]
+    private ?Tickets $ticket = null;
 
     public function getId(): ?int
     {
@@ -61,40 +59,44 @@ class Reservation
         return $this;
     }
 
-    public function getTicket(): ?Tickets
+    public function getEvent(): ?Events
     {
-        return $this->Ticket;
+        return $this->Event;
     }
 
-    public function setTicket(Tickets $Ticket): static
+    public function setEvent(?Events $Event): static
     {
-        $this->Ticket = $Ticket;
+        $this->Event = $Event;
 
         return $this;
     }
 
     public function getUser(): ?User
     {
-        return $this->user;
+        return $this->User;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $User): static
     {
-        $this->user = $user;
+        $this->User = $User;
 
         return $this;
     }
 
-    public function getEvents(): ?Events
+    public function getTicket(): ?Tickets
     {
-        return $this->events;
+        return $this->ticket;
     }
 
-    public function setEvents(?Events $events): static
+    public function setTicket(Tickets $ticket): static
     {
-        $this->events = $events;
+        // set the owning side of the relation if necessary
+        if ($ticket->getReservation() !== $this) {
+            $ticket->setReservation($this);
+        }
+
+        $this->ticket = $ticket;
 
         return $this;
     }
-
 }

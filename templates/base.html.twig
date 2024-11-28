@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
+{% if app.user %}
+    <div class="mb-3">
+        You are logged in as {{ app.user.name }}, <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+{% endif %}
 <header>
     {# Optional: Add a navbar or site header here #}
 </header>

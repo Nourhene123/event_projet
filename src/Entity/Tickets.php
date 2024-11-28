@@ -19,6 +19,10 @@ class Tickets
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
+    #[ORM\OneToOne(inversedBy: 'ticket', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Reservation $reservation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +48,18 @@ class Tickets
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getReservation(): ?Reservation
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(Reservation $reservation): static
+    {
+        $this->reservation = $reservation;
 
         return $this;
     }
