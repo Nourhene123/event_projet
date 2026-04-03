@@ -1,93 +1,465 @@
 # Events_project
 
+# GestionEvent
 
+Event Management SaaS Platform — Symfony 6.4 + PHP 8.1
 
-## Getting started
+A comprehensive event management system built with Symfony 6.4 and PHP 8.1. GestionEvent helps organizers, venues, and attendees manage events, venues, rentals, reservations, and ticketing in one unified platform.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+---
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## 👥 Team & Methodology
 
-## Add your files
+**Developed collaboratively by:**
+- **Nourhene Ferchichi** — Full-stack Developer
+- - **Jesser Mdimagh ** — Full-stack Developer
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+**Methodology:** Agile (Scrum) — Iterative development with real-time feedback integration and bi-weekly sprints.
+
+---
+
+## 🎫 About GestionEvent
+
+"Simplifying event management, one booking at a time."
+
+GestionEvent is a secure, scalable SaaS platform designed to help event organizers, venue owners, and attendees streamline event planning. It eliminates manual booking chaos, paperwork, and fragmented communication.
+
+### Key Capabilities
+
+| Feature | Description |
+|---------|-------------|
+| **Event Management** | Create, organize, and manage events with details, scheduling, and categorization |
+| **Venue Management** | Manage venues (Local) with capacity, location, and availability tracking |
+| **Rental System** | Handle equipment and space rentals (Louer) with pricing and availability |
+| **Reservations** | Online booking system with user reservations and status tracking |
+| **Ticketing** | Generate and manage tickets with QR codes and validation |
+| **User Authentication** | Secure login with email verification and role-based access |
+| **Dashboard Analytics** | Overview of events, bookings, and revenue metrics |
+
+---
+
+## 🏗️ Architecture Overview
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/devops3810440/events_project.git
-git branch -M main
-git push -uf origin main
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       GestionEvent Frontend                              │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐│
+│  │   Admin      │  │  Organizer   │  │   Venue      │  │   Attendee   ││
+│  │  Dashboard   │  │   Console    │  │   Manager    │  │    Portal    ││
+│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘│
+│  ┌─────────────────────────────────────────────────────────────────────┐│
+│  │                     Public Event Discovery                           ││
+│  │    Browse Events • Book Tickets • View Venues • Manage Reservations││
+│  └─────────────────────────────────────────────────────────────────────┘│
+├─────────────────────────────────────────────────────────────────────────┤
+│  🔐 Symfony Security • 🎨 Twig + Bootstrap • ⚡ Doctrine ORM             │
+└─────────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────────┐
+                    │   Database Layer    │
+                    │  (PostgreSQL/MySQL) │
+                    └─────────────────────┘
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.com/devops3810440/events_project/-/settings/integrations)
+## 🎯 Role-Based Access Control (RBAC)
 
-## Collaborate with your team
+| Role | Access Level | Key Pages |
+|------|--------------|-----------|
+| **Administrator** | Super Admin — Full system control | `/admin/*` — Users, Events, Venues, Settings |
+| **Organizer** | Event management | `/events/*` — Create/Edit events, Manage bookings |
+| **Venue Manager** | Venue operations | `/local/*` — Venue details, Availability, Rentals |
+| **Attendee** | Self-service portal | `/reservation/*` — Book events, View tickets, History |
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+---
 
-## Test and Deploy
+## 🛠️ Tech Stack
 
-Use the built-in continuous integration in GitLab.
+### Core Framework
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| PHP | 8.1+ | Server-side scripting |
+| Symfony | 6.4.* | MVC framework, routing, security |
+| Doctrine ORM | 3.3 | Database abstraction, entities, migrations |
+| Twig | 3.0 | Template engine |
+| Composer | 2.x | Dependency management |
 
-***
+### Authentication & Security
 
-# Editing this README
+| Technology | Purpose |
+|------------|---------|
+| Symfony Security Bundle | Authentication, authorization, firewalls |
+| SymfonyCasts Verify Email | Email verification for user registration |
+| Password Hashing | Secure password storage (bcrypt) |
+| CSRF Protection | Form security |
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Frontend & UI
 
-## Suggestions for a good README
+| Technology | Purpose |
+|------------|---------|
+| Twig Templates | Server-side rendering |
+| Symfony Asset Mapper | Asset management, import maps |
+| Bootstrap / CSS | Responsive styling |
+| Stimulus | JavaScript behavior framework |
+| Symfony UX Turbo | SPA-like navigation |
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Database & Storage
 
-## Name
-Choose a self-explaining name for your project.
+| Technology | Purpose |
+|------------|---------|
+| Doctrine DBAL | Database abstraction layer |
+| Doctrine Migrations | Schema versioning |
+| PostgreSQL / MySQL | Primary database |
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Development Tools
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+| Technology | Purpose |
+|------------|---------|
+| Symfony Maker Bundle | Code generation |
+| Web Profiler Bundle | Debug toolbar |
+| PHPUnit | Unit & functional testing |
+| PHPStan | Static analysis |
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## 📁 Project Structure
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```
+events_project/
+├── assets/                     # Frontend assets (JS, CSS, images)
+│   ├── app.js                  # Main JavaScript entry
+│   └── styles/                 # CSS/SCSS files
+├── bin/                        # Executable scripts
+│   └── console                 # Symfony CLI
+├── config/                     # Configuration files
+│   ├── packages/               # Bundle configurations
+│   ├── routes/                 # Route definitions
+│   └── services.yaml           # Service container config
+├── migrations/                 # Doctrine database migrations
+├── public/                     # Web server root
+│   └── index.php               # Front controller
+├── src/                        # Application source code
+│   ├── Controller/             # Request handlers
+│   │   ├── EventsController.php
+│   │   ├── LocalController.php
+│   │   ├── LouerController.php
+│   │   ├── ReservationController.php
+│   │   ├── TicketsController.php
+│   │   ├── UserController.php
+│   │   ├── SecurityController.php
+│   │   ├── RegistrationController.php
+│   │   └── ApiLoginController.php
+│   ├── Entity/                 # Doctrine entities
+│   │   ├── User.php              # User accounts
+│   │   ├── Events.php            # Events
+│   │   ├── Local.php             # Venues
+│   │   ├── Louer.php             # Rentals
+│   │   ├── Reservation.php       # Bookings
+│   │   └── Tickets.php           # Tickets
+│   ├── Form/                   # Form types
+│   ├── Repository/             # Doctrine repositories
+│   ├── Security/               # Security utilities
+│   └── Kernel.php              # Application kernel
+├── templates/                  # Twig templates
+│   ├── base.html.twig          # Base layout
+│   ├── events/                 # Event pages
+│   ├── local/                  # Venue pages
+│   ├── louer/                  # Rental pages
+│   ├── reservation/            # Reservation pages
+│   ├── tickets/                # Ticket pages
+│   ├── user/                   # User profile pages
+│   ├── security/               # Login/logout pages
+│   └── registration/           # Sign-up pages
+├── tests/                      # PHPUnit tests
+├── translations/               # i18n files
+├── compose.yaml                # Docker Compose config
+├── composer.json               # PHP dependencies
+├── importmap.php               # Asset import map
+└── .env                        # Environment variables
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+---
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## 🚀 Getting Started
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Prerequisites
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- PHP 8.1 or higher
+- Composer 2.x
+- PostgreSQL or MySQL
+- Node.js (optional, for asset building)
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Installation
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+# Clone the repository
+cd events_project
 
-## License
-For open source projects, say how it is licensed.
+# Install PHP dependencies
+composer install
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+# Install JavaScript dependencies (if using Node)
+npm install
+```
+
+### Environment Configuration
+
+Copy `.env` to `.env.local` and configure:
+
+```bash
+# Database configuration
+DATABASE_URL="postgresql://user:password@localhost:5432/gestionevent_db"
+# Or for MySQL:
+# DATABASE_URL="mysql://user:password@localhost:3306/gestionevent_db"
+
+# Email configuration (for verification)
+MAILER_DSN=smtp://user:pass@smtp.gmail.com:587
+
+# App environment
+APP_ENV=dev
+APP_SECRET=your_random_secret_here
+```
+
+### Database Setup
+
+```bash
+# Create database
+php bin/console doctrine:database:create
+
+# Run migrations
+php bin/console doctrine:migrations:migrate
+
+# (Optional) Load fixtures
+php bin/console doctrine:fixtures:load
+```
+
+### Development
+
+```bash
+# Start the Symfony development server
+symfony server:start
+
+# Or with PHP built-in server
+php -S localhost:8000 -t public/
+
+# Watch assets (if using Webpack Encore or AssetMapper)
+php bin/console asset-map:compile
+```
+
+App runs at `http://localhost:8000`
+
+---
+
+## 🔐 How Authentication Works
+
+### 1. Login Flow
+
+```
+User → /login page → SecurityController → Symfony Security
+                                               │
+                                               ▼
+User ← Session Cookie ←─── Authentication Success
+```
+
+The `SecurityController` handles:
+
+- Username/password authentication
+- Session-based security (no JWT tokens)
+- Role-based access control
+- CSRF protection on all forms
+
+### 2. Session & Security Strategy
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Login     │────▶│  Session    │────▶│   Access    │
+│   Form      │     │   Handler   │     │   Control   │
+└─────────────┘     └─────────────┘     └─────────────┘
+      │                   │                   │
+      ▼                   ▼                   ▼
+ Credentials          Stores:             Checks:
+ - email              - user_id             - ROLE_USER
+ - password           - roles               - ROLE_ADMIN
+                      - isVerified          - ROLE_ORGANIZER
+```
+
+### 3. Route Protection (Security)
+
+Security configuration enforces role-based access:
+
+```yaml
+# config/packages/security.yaml
+access_control:
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/events/new, roles: ROLE_ORGANIZER }
+    - { path: ^/local/manage, roles: [ROLE_ADMIN, ROLE_VENUE_MANAGER] }
+    - { path: ^/reservation, roles: ROLE_USER }
+```
+
+**Security Features:**
+
+- ✅ Hashed passwords (bcrypt)
+- ✅ CSRF token protection on all forms
+- ✅ Session-based authentication
+- ✅ Role-based access control
+- ✅ Email verification for new accounts
+- ✅ Automatic logout on inactivity
+
+---
+
+## 📊 Key Features Explained
+
+### 🎫 Event Management
+
+- Create and manage events with details (name, date, location, description)
+- Categorize events by type
+- Set capacity limits and pricing
+- View event listings and details
+
+### 🏢 Venue (Local) Management
+
+- Manage venue information (name, address, capacity)
+- Track venue availability
+- Associate events with venues
+- Venue gallery and amenities
+
+### 🛒 Rental (Louer) System
+
+- Manage rental items (equipment, spaces)
+- Pricing and availability tracking
+- Rental booking integration with events
+- Rental history and returns
+
+### 📅 Reservation System
+
+- Online booking for events
+- Reservation status tracking (pending, confirmed, cancelled)
+- User reservation history
+- Capacity management
+
+### 🎟️ Ticketing
+
+- Automatic ticket generation
+- QR code support for validation
+- Ticket types (VIP, Standard, Early Bird)
+- Download and email delivery
+
+---
+
+## 🐳 Docker
+
+```bash
+# Build and start containers
+docker-compose up -d
+
+# Run database migrations
+docker-compose exec php php bin/console doctrine:migrations:migrate
+
+# Access the application
+curl http://localhost:8000
+```
+
+Docker Compose includes:
+
+- PHP 8.1 + Apache/Nginx
+- PostgreSQL database
+- Mailpit (for email testing)
+
+---
+
+## 📚 Documentation
+
+- [Symfony Documentation](https://symfony.com/doc/6.4/index.html)
+- [Doctrine ORM Documentation](https://www.doctrine-project.org/projects/orm.html)
+- [Twig Documentation](https://twig.symfony.com/doc/3.x/)
+- [SymfonyCasts Tutorials](https://symfonycasts.com/)
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run PHPUnit tests
+php bin/phpunit
+
+# Run specific test suite
+php bin/phpunit --filter ReservationTest
+
+# Code coverage
+php bin/phpunit --coverage-html coverage/
+```
+
+---
+
+## 📦 Deployment
+
+### Production Checklist
+
+1. Set `APP_ENV=prod` in `.env`
+2. Generate unique `APP_SECRET`
+3. Configure production database
+4. Set up mailer DSN for production
+5. Optimize autoloader: `composer install --optimize-autoloader --no-dev`
+6. Clear and warm up cache: `php bin/console cache:clear --env=prod`
+7. Compile assets: `php bin/console asset-map:compile`
+
+### Production Server Requirements
+
+- PHP 8.1+ with extensions: `pdo_pgsql`, `intl`, `mbstring`, `xml`
+- PostgreSQL 13+ or MySQL 8.0+
+- Web server (Nginx/Apache) with rewrite rules
+- SSL certificate (HTTPS)
+
+---
+
+## 🔧 Common Commands
+
+```bash
+# Clear cache
+php bin/console cache:clear
+
+# Create new entity
+php bin/console make:entity
+
+# Create migration
+php bin/console make:migration
+
+# Run migrations
+php bin/console doctrine:migrations:migrate
+
+# Validate database schema
+php bin/console doctrine:schema:validate
+
+# Debug router
+php bin/console debug:router
+
+# Debug container services
+php bin/console debug:container
+
+# Check security vulnerabilities
+symfony security:check
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is proprietary software. All rights reserved.
+
+
+Built with ❤️ using Symfony
+
