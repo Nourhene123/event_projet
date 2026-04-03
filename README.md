@@ -1,4 +1,4 @@
-# Events_project
+
 
 # GestionEvent
 
@@ -12,7 +12,7 @@ A comprehensive event management system built with Symfony 6.4 and PHP 8.1. Gest
 
 **Developed collaboratively by:**
 - **Nourhene Ferchichi** — Full-stack Developer
-- - **Jesser Mdimagh ** — Full-stack Developer
+- **Jesser Mdimagh ** — Full-stack Developer
 
 **Methodology:** Agile (Scrum) — Iterative development with real-time feedback integration and bi-weekly sprints.
 
